@@ -6,22 +6,32 @@ var blas2 = require('ndarray-blas-level2');
 var lineSearch = require('./line-search.js');
 var gradientSelect = require('./lib/gradient-select.js');
 var rankUpdater = require('./lib/update-select.js');
+var defaults = require('./global-defaults.js');
 
-var MAX_ITERATIONS = 200;
 module.exports = function quasiNewton (options) {
-  if (!options.start) {
+  if (!options.objective) {
+    throw new Error('Undefined optimization objective.');
+  }
+  if (!options.objective.start) {
     throw new Error('Undefined start position.');
   }
   if (!options.objective.func) {
     throw new Error('Undefined objective function.');
   }
-  var maxIterations = options.solution.maxIterations || MAX_ITERATIONS;
-  var TOLERANCE = options.solution.tolerance || 1e-11;
-  var evaluateDerivative = gradientSelect(options);
+  var maxIterations = defaults.MAX_ITERATIONS;
+  var tolerance = defaults.tolerance;
+  if (options.objective.solution) {
+    maxIterations = options.objective.solution.maxIterations;
+    tolerance = options.objective.solution.tolerance;
+  } else {
+    console.warn('Maximum iterations capped at default of ' + maxIterations + '.');
+    console.warn('Numerical tolerance is default of ' + tolerance + '.');
+  }
+  var evaluateDerivative = gradientSelect(options.objective);
   var F = options.objective.func;
   var updateInverse = rankUpdater(options);
 
-  var x0 = options.start;
+  var x0 = options.objective.start;
   var n = x0.shape[0];
   var x1 = ndarray(new Float64Array(n), [n]);
   var dx = ndarray(new Float64Array(n), [n]);
@@ -42,7 +52,7 @@ module.exports = function quasiNewton (options) {
   var iter = 0;
   var temp1;
   var temp2;
-  while (Math.abs(f1 - f0) > TOLERANCE && Math.abs(gradNorm) > TOLERANCE && iter++ <= maxIterations) {
+  while (Math.abs(f1 - f0) > tolerance && Math.abs(gradNorm) > tolerance && iter++ <= maxIterations) {
     lineSearch.parabolicApprox(x0, y, F, x1);
     gradNorm = evaluateDerivative(x1, grad1);
     f0 = f1;
@@ -61,7 +71,7 @@ module.exports = function quasiNewton (options) {
     x1 = temp2;
   }
 
-  var solutionValid = (Math.abs(f1 - f0) > TOLERANCE) || (Math.abs(gradNorm) > TOLERANCE);
+  var solutionValid = (Math.abs(f1 - f0) > tolerance) || (Math.abs(gradNorm) > tolerance);
   var results = {
     'solutionValid': solutionValid,
     'iterations': iter,

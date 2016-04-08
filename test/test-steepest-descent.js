@@ -24,72 +24,69 @@ describe('Unconstrained -- Steepest Descent', function () {
   it('Numerical Derivatives', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2]);
     var options = {
-      'start': x0,
       'objective': {
-        'func': F
-      },
-      'gradient': {
-        'func': 'centralDifference',
-        'delta': 0.01,
-        'array': null
-      },
-      'solution': {
-        'tolerance': 1e-4,
-        'maxIterations': 200
+        'start': x0,
+        'func': F,
+        'gradient': {
+          'func': 'centralDifference',
+          'delta': 0.01
+        },
+        'solution': {
+          'tolerance': 1e-4,
+          'maxIterations': 200
+        }
       }
     };
     var results = steepestDescent(options);
     // console.log(results);
     chai.assert(results.solutionValid, 'Solution is not optimal');
-    chai.assert.isBelow(results.objective, 5e-5, 'Result is not within tolerance');
+    chai.assert.isBelow(results.objective, 1e-4, 'Result is not within tolerance');
   });
 
   it('Analytical Derivatives', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2]);
     var options = {
-      'start': x0,
       'objective': {
-        'func': F
-      },
-      'gradient': {
-        'func': function (X, grad) {
-          var x1 = X.get(0);
-          var x2 = X.get(1);
-          var g1 = 2 * x1 - 2 * x2;
-          var g2 = -2 * x1 + 8 * x2;
-          grad.set(0, g1);
-          grad.set(1, g2);
-          return Math.sqrt(g1 * g1 + g2 * g2);
+        'start': x0,
+        'func': F,
+        'gradient': {
+          'func': function (X, grad) {
+            var x1 = X.get(0);
+            var x2 = X.get(1);
+            var g1 = 2 * x1 - 2 * x2;
+            var g2 = -2 * x1 + 8 * x2;
+            grad.set(0, g1);
+            grad.set(1, g2);
+            return Math.sqrt(g1 * g1 + g2 * g2);
+          },
+          'delta': 0
         },
-        'delta': 0,
-        'array': null
-      },
-      'solution': {
-        'tolerance': 1e-4,
-        'maxIterations': 200
+        'solution': {
+          'tolerance': 1e-4,
+          'maxIterations': 200
+        }
       }
     };
     var results = steepestDescent(options);
     // console.log(results);
     chai.assert(results.solutionValid, 'Solution is not optimal');
-    chai.assert.isBelow(results.objective, 5e-5, 'Result is not within tolerance');
+    chai.assert.isBelow(results.objective, 1e-4, 'Result is not within tolerance');
   });
 
   it('One Step Descent -- Numerical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2]);
     var options = {
-      'start': x0,
       'objective': {
-        'func': parabola
-      },
-      'gradient': {
-        'func': 'centralDifference',
-        'delta': 0.01,
-        'array': null
-      },
-      'solution': {
-        'tolerance': 1e-10,
-        'maxIterations': 200
+        'start': x0,
+        'func': parabola,
+        'gradient': {
+          'func': 'centralDifference',
+          'delta': 0.01
+        },
+        'solution': {
+          'tolerance': 1e-10,
+          'maxIterations': 200
+        }
       }
     };
     var results = steepestDescent(options);
@@ -102,26 +99,26 @@ describe('Unconstrained -- Steepest Descent', function () {
   it('One Step Descent -- Analytical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2]);
     var options = {
-      'start': x0,
       'objective': {
-        'func': parabola
-      },
-      'gradient': {
-        'func': function (X, grad) {
-          var x1 = X.get(0);
-          var x2 = X.get(1);
-          var g1 = 2 * x1;
-          var g2 = 2 * x2;
-          grad.set(0, g1);
-          grad.set(1, g2);
-          return Math.sqrt(g1 * g1 + g2 * g2);
+        'start': x0,
+        'func': parabola,
+        'gradient': {
+          'func': function (X, grad) {
+            var x1 = X.get(0);
+            var x2 = X.get(1);
+            var g1 = 2 * x1;
+            var g2 = 2 * x2;
+            grad.set(0, g1);
+            grad.set(1, g2);
+            return Math.sqrt(g1 * g1 + g2 * g2);
+          },
+          'delta': 0,
+          'array': null
         },
-        'delta': 0,
-        'array': null
-      },
-      'solution': {
-        'tolerance': 1e-10,
-        'maxIterations': 200
+        'solution': {
+          'tolerance': 1e-10,
+          'maxIterations': 200
+        }
       }
     };
     var results = steepestDescent(options);

@@ -8,57 +8,69 @@ Optimization methods have very similar inputs, so the options structure provides
 
 ```
 options = {
-  'start': <ndarray>
   'objective': {
-    'func': <function>
-  },
-  'gradient': {
-    'func': <string> or <function>,
-    'delta': <number>
-  },
-  'solution': {
-    'tolerance': <number>,
-    'maxIterations': <number>
+    'start': <ndarray>,
+    'func': <function>,
+    'gradient': {
+      'func': <string> or <function>,
+      'delta': <number>
+    },
+    'solution': {
+      'tolerance': <number>,
+      'maxIterations': <number>
+    }
   },
   'update': {
     'hessianInverse': <boolean>,
     'type': <string>
+  },
+  'constraints': {
+    'equality': [
+      {
+        'func': <function>,
+        'gradient': <function> or <string>,
+      },
+      {
+        'func': <function>,
+        'gradient': <function> or <string>,
+      }
+    ],
+    'inequality': [
+      {
+        'func': <function>,
+        'gradient': <function> or <string>,
+      },
+      {
+        'func': <function>,
+        'gradient': <function> or <string>,
+      }
+      ...
+    ]
   }
 }
 ```
 
 ### Modules
 
-#### start
-
-Required for all routines. This defines the starting position of the optimization routine.
-
 #### objective
 
-Required for all routines. This defines the objective function that is to be minimized. 
+Required for all routines. This defines the objective function that is to be minimized.
 
+- `"start"`: the n-dimensional start position for the optimization routine.
 - `"func"`: this is the scalar objective function.
   - Options:
     - `function(X) { ... }`:  a function that takes a n-dimensional vector X as its only argument and returns a scalar.
-
-#### gradient
-
-Required for all routines. This defines how the gradient of the objective function is determined.
-
-- `"func"`: this takes the current n-dimensional position vector and evaluates the gradient at that position.
-  - Options:
-    - `function(X, grad) { ... }`: a function that evaluates at `X` and modifies the `grad` argument.
-    - `"forwardDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the forward difference method.
-    - `"backwardDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the backward difference method.
-    - `"centralDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the central difference method.
-- `"delta"`: a number that specifies the numerical step that the numerical derivatives will take. This is only used when numerical derivatives are specified.
-
-#### solution
-
-Required for all routines. This defines how a solution is to be determined.
-
-- `"tolerance"`: the tolerance that must be achieved in order to count as a valid solution. To count as a solution, either the objective function or the gradient norm must be below this tolerance.
-- `maxIterations`: the maximum number of iterations that the optimization routine will run before quitting. The solution given when this is reached is not necessarily valid.
+- `"gradient"`: this is the gradient of the objective function is determined.
+  - `"func"`: this takes the current n-dimensional position vector and evaluates the gradient at that position.
+    - Options:
+      - `function(X, grad) { ... }`: a function that evaluates at `X` and modifies the `grad` argument.
+      - `"forwardDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the forward difference method.
+      - `"backwardDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the backward difference method.
+      - `"centralDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the central difference method.
+  - `"delta"`: a number that specifies the numerical step that the numerical derivatives will take. This is only used when numerical derivatives are specified.
+- "solution": this defines how a solution is to be determined.
+  - `"tolerance"`: the tolerance that must be achieved in order to count as a valid solution. To count as a solution, either the objective function or the gradient norm must be below this tolerance.
+  - `maxIterations`: the maximum number of iterations that the optimization routine will run before quitting. The solution given when this is reached is not necessarily valid.
 
 #### update
 
@@ -70,6 +82,17 @@ Used where Hessian and Hessian inverse updates are required.
     - `"rank1"`: a rank-1 update.
     - `"rank2-dfp"`: a rank-2 update using the DFP algorithm.
     - `"rank2-bfgs"`: a rank-2 update using the BFGS algorithm. This is the default if the string is mangled.
+
+#### constraints
+
+Used in constrained algorithms, such as sequential quadratic programming.
+
+- `"equality"`: an array of objects that represent equality constraints that must be satisfied. The constraint function is considered satisfied if the scalar function is less than the tolerance specified.
+- `"inequality"`: an array of objects that represent inequality constraints that must be satisfied. The constraint function is considered satisfied if the scalar function value is less than zero.
+
+Each constraint is an object with the following properties:
+- `"func"`:
+- `"gradient"`:
 
 ## Notes
 

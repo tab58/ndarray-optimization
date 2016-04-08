@@ -15,7 +15,7 @@ module.exports = function getGradient (options) {
             delta = Math.abs(options.gradient.delta);
           }
           derivFn = function (X, grad) {
-            return derivs.forwardDifference(X, delta, options.objective.func, grad);
+            return derivs.forwardDifference(X, delta, options.func, grad);
           };
           break;
         case 'backwardDifference':
@@ -24,7 +24,7 @@ module.exports = function getGradient (options) {
             delta = Math.abs(options.gradient.delta);
           }
           derivFn = function (X, grad) {
-            return derivs.backwardDifference(X, delta, options.objective.func, grad);
+            return derivs.backwardDifference(X, delta, options.func, grad);
           };
           break;
         case 'centralDifference':
@@ -33,7 +33,7 @@ module.exports = function getGradient (options) {
             delta = Math.abs(options.gradient.delta);
           }
           derivFn = function (X, grad) {
-            return derivs.centralDifference(X, delta, options.objective.func, grad);
+            return derivs.centralDifference(X, delta, options.func, grad);
           };
           break;
       }
@@ -46,7 +46,7 @@ module.exports = function getGradient (options) {
       delta = Math.abs(options.gradient.delta);
     }
     derivFn = function (X, grad) {
-      return derivs.centralDifference(X, delta, options.objective.func, grad);
+      return derivs.centralDifference(X, delta, options.func, grad);
     };
   }
 
