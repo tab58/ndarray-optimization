@@ -87,8 +87,8 @@ Used where Hessian and Hessian inverse updates are required.
 
 Used in constrained algorithms, such as sequential quadratic programming.
 
-- `"equality"`: an array of objects that represent equality constraints that must be satisfied. The constraint function is considered satisfied if the scalar function is less than the tolerance specified.
-- `"inequality"`: an array of objects that represent inequality constraints that must be satisfied. The constraint function is considered satisfied if the scalar function value is less than zero.
+- `"equality"`: an array of objects that represent equality constraints (i.e. `g(x) = 0`) that must be satisfied. The constraint function is considered satisfied if the scalar function is less than the tolerance specified. 
+- `"inequality"`: an array of objects that represent inequality constraints (i.e. `g(x) >= 0`) that must be satisfied. The constraint function is considered satisfied if the scalar function value is greater than zero.
 
 Each constraint is an object with the following properties:
 - `"func"`:
