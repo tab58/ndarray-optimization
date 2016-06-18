@@ -33,7 +33,8 @@ options = {
       {
         'func': <function>,
         'gradient': <function> or <string>,
-      }
+      },
+      ...
     ],
     'inequality': [
       {
@@ -43,7 +44,7 @@ options = {
       {
         'func': <function>,
         'gradient': <function> or <string>,
-      }
+      },
       ...
     ]
   }
