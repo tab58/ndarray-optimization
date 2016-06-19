@@ -47,6 +47,10 @@ options = {
       },
       ...
     ]
+  },
+  'solution': {
+    'tolerance': <number>,
+    'maxIterations': <number/integer>
   }
 }
 ```
@@ -69,7 +73,7 @@ Required for all routines. This defines the objective function that is to be min
       - `"backwardDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the backward difference method.
       - `"centralDifference"`: the string literal that specifies use of the objective function to calculate the derivative numerically using the central difference method.
   - `"delta"`: a number that specifies the numerical step that the numerical derivatives will take. This is only used when numerical derivatives are specified.
-- "solution": this defines how a solution is to be determined.
+- `"solution"`: this defines how a solution is to be determined.
   - `"tolerance"`: the tolerance that must be achieved in order to count as a valid solution. To count as a solution, either the objective function or the gradient norm must be below this tolerance.
   - `maxIterations`: the maximum number of iterations that the optimization routine will run before quitting. The solution given when this is reached is not necessarily valid.
 
@@ -92,8 +96,8 @@ Used in constrained algorithms, such as sequential quadratic programming.
 - `"inequality"`: an array of objects that represent inequality constraints (i.e. `g(x) >= 0`) that must be satisfied. The constraint function is considered satisfied if the scalar function value is greater than zero.
 
 Each constraint is an object with the following properties:
-- `"func"`:
-- `"gradient"`:
+- `"func"`: the function that defines the constraint.
+- `"gradient"`: an object that defines the gradient of the constraint (see objective gradient above).
 
 ## Notes
 
