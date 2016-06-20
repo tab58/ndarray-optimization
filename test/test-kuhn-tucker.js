@@ -17,16 +17,6 @@ describe('Constrained - Kuhn-Tucker Conditions', function () {
       return f;
     };
 
-    var dF = function (X, grad) {
-      var x1 = X.get(0, 0);
-      var x2 = X.get(1, 0);
-      var g1 = 2 * x1;
-      var g2 = 8 * x2;
-      grad.set(0, 0, g1);
-      grad.set(1, 0, g2);
-      return Math.sqrt(g1 * g1 + g2 * g2);
-    };
-
     var G1 = function (X) {
       var x1 = X.get(0, 0);
       var x2 = X.get(1, 0);
@@ -38,8 +28,8 @@ describe('Constrained - Kuhn-Tucker Conditions', function () {
       objective: {
         func: F,
         gradient: {
-          func: dF,
-          delta: 0
+          func: 'centralDifference',
+          delta: 0.01
         }
       },
       constraints: {

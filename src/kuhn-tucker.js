@@ -131,7 +131,7 @@ module.exports = function kuhnTucker (options, X, tolerance) {
   // if there are actually constraints, there will be r of them
   var lambda = ndarray(new Float64Array(r), [r, 1]);
   if (r > 0) {
-    N.hi(n, r); // N.shape[1] = r;
+    N.hi(n - 1, r - 1);
     // gradF - N*lambda = 0, N is n x r
     // i = 0, ..., ri are inequality
     // i = r1 + 1, ..., r are equality
@@ -143,8 +143,8 @@ module.exports = function kuhnTucker (options, X, tolerance) {
 
     // Q^T * N = | Q_1^T * N | = | R |
     //           | Q_2^T * N |   | 0 |
-    Qt.hi(r, n); // Qt.shape[0] = r; // now it's r x n
-    R.hi(r, r); // R.shape[0] = r; // now it's also r x r
+    Qt.hi(r - 1, n - 1); // Qt.shape[0] = r; // now it's r x n
+    R.hi(r - 1, r - 1); // R.shape[0] = r; // now it's also r x r
 
     // now solve the equation R * lambda = Q_1^T * gradF to get a least-squares solution for lambda
     // construct Q_1^T * gradF
