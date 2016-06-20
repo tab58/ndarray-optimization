@@ -5,6 +5,7 @@ An optimization library for [ndarrays](https://github.com/scijs/ndarray).
 ## Available Functions
 
 - Unconstrained Optimization
+  - Parabolic Line Search
   - Steepest Descent
   - Quasi-Newton Methods
     - Rank 1 Update
