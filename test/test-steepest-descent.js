@@ -5,8 +5,8 @@ var ndarray = require('ndarray');
 var steepestDescent = require('../src/steepest-descent.js');
 
 var F = function (X) {
-  var x1 = X.get(0);
-  var x2 = X.get(1);
+  var x1 = X.get(0, 0);
+  var x2 = X.get(1, 0);
   // var f = x1 * x1 + x2 * x2;
   var f = x1 * x1 - 2 * x1 * x2 + 4 * x2 * x2;
   // console.log('F(' + x1 + ',' + x2 + ') = ' + f);
@@ -14,15 +14,15 @@ var F = function (X) {
 };
 
 var parabola = function (X) {
-  var x1 = X.get(0);
-  var x2 = X.get(1);
+  var x1 = X.get(0, 0);
+  var x2 = X.get(1, 0);
   var f = x1 * x1 + x2 * x2;
   return f;
 };
 
 describe('Unconstrained -- Steepest Descent', function () {
   it('Numerical Derivatives', function () {
-    var x0 = ndarray(new Float64Array([-3, 1]), [2]);
+    var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
       'objective': {
         'start': x0,
@@ -44,19 +44,19 @@ describe('Unconstrained -- Steepest Descent', function () {
   });
 
   it('Analytical Derivatives', function () {
-    var x0 = ndarray(new Float64Array([-3, 1]), [2]);
+    var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
       'objective': {
         'start': x0,
         'func': F,
         'gradient': {
           'func': function (X, grad) {
-            var x1 = X.get(0);
-            var x2 = X.get(1);
+            var x1 = X.get(0, 0);
+            var x2 = X.get(1, 0);
             var g1 = 2 * x1 - 2 * x2;
             var g2 = -2 * x1 + 8 * x2;
-            grad.set(0, g1);
-            grad.set(1, g2);
+            grad.set(0, 0, g1);
+            grad.set(1, 0, g2);
             return Math.sqrt(g1 * g1 + g2 * g2);
           },
           'delta': 0
@@ -74,7 +74,7 @@ describe('Unconstrained -- Steepest Descent', function () {
   });
 
   it('One Step Descent -- Numerical', function () {
-    var x0 = ndarray(new Float64Array([-3, 1]), [2]);
+    var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
       'objective': {
         'start': x0,
@@ -97,19 +97,19 @@ describe('Unconstrained -- Steepest Descent', function () {
   });
 
   it('One Step Descent -- Analytical', function () {
-    var x0 = ndarray(new Float64Array([-3, 1]), [2]);
+    var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
       'objective': {
         'start': x0,
         'func': parabola,
         'gradient': {
           'func': function (X, grad) {
-            var x1 = X.get(0);
-            var x2 = X.get(1);
+            var x1 = X.get(0, 0);
+            var x2 = X.get(1, 0);
             var g1 = 2 * x1;
             var g2 = 2 * x2;
-            grad.set(0, g1);
-            grad.set(1, g2);
+            grad.set(0, 0, g1);
+            grad.set(1, 0, g2);
             return Math.sqrt(g1 * g1 + g2 * g2);
           },
           'delta': 0,

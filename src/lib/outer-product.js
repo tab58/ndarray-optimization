@@ -10,7 +10,7 @@ module.exports.replaceExisting = function outerProduct (a, b, alpha, N) {
   var j = 0;
   for (i = 0; i < m; ++i) {
     for (j = 0; j < n; ++j) {
-      A.set(i, j, alpha * a.get(i) * b.get(j));
+      A.set(i, j, alpha * a.get(i, 0) * b.get(j, 0));
     }
   }
   return A;
@@ -24,7 +24,7 @@ module.exports.addToExisting = function outerProduct (a, b, alpha, N) {
   var j = 0;
   for (i = 0; i < m; ++i) {
     for (j = 0; j < n; ++j) {
-      A.set(i, j, (alpha * a.get(i) * b.get(j)) + N.get(i, j));
+      A.set(i, j, (alpha * a.get(i, 0) * b.get(j, 0)) + N.get(i, j));
     }
   }
   return A;

@@ -2,7 +2,7 @@
 
 var ndarray = require('ndarray');
 var blas1 = require('ndarray-blas-level1');
-var blas2 = require('ndarray-blas-level2');
+var gemv = require('./lib/math/gemv.js');
 var lineSearch = require('./line-search.js');
 var gradientSelect = require('./lib/gradient-select.js');
 var rankUpdater = require('./lib/update-select.js');
@@ -33,11 +33,11 @@ module.exports = function quasiNewton (options) {
 
   var x0 = options.objective.start;
   var n = x0.shape[0];
-  var x1 = ndarray(new Float64Array(n), [n]);
-  var dx = ndarray(new Float64Array(n), [n]);
-  var grad0 = ndarray(new Float64Array(n), [n]);
-  var grad1 = ndarray(new Float64Array(n), [n]);
-  var y = ndarray(new Float64Array(n), [n]);
+  var x1 = ndarray(new Float64Array(n), [n, 1]);
+  var dx = ndarray(new Float64Array(n), [n, 1]);
+  var grad0 = ndarray(new Float64Array(n), [n, 1]);
+  var grad1 = ndarray(new Float64Array(n), [n, 1]);
+  var y = ndarray(new Float64Array(n), [n, 1]);
   var N = ndarray(new Float64Array(n * n), [n, n]);
   var f0 = Number.POSITIVE_INFINITY;
   var f1 = F(x0);
@@ -62,7 +62,7 @@ module.exports = function quasiNewton (options) {
     blas1.copy(grad1, y);
     blas1.axpy(-1.0, grad0, y);
     updateInverse(N, y, dx);
-    blas2.gemv(-1.0 / gradNorm, N, grad1, 0.0, y);
+    gemv(-1.0 / gradNorm, N, grad1, 0.0, y);
     temp1 = grad0;
     grad0 = grad1;
     grad1 = temp1;

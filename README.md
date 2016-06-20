@@ -101,6 +101,8 @@ Each constraint is an object with the following properties:
 
 ## Notes
 
+- The convention is to define everything as a 2D array, including column vectors. The `ndarray` library requires different arguments for a 1D vector and a 2D matrix with 1 column when it comes to the `.get()` and `.set()` functions. Sometimes, a `NaN` is returned if this isn't done correctly, so 2D matrices are required.
+
 - The rank update algorithms rely on the Hessian matrix being symmetric locally. Although this is often the case, there are cases where it is not. This is usually a problem with differentiability of the objective function. A lack of symmetry may lead to an erroneous result.
 
 ## License

@@ -30,7 +30,7 @@ module.exports = function steepestDescent (options) {
   var n = X.shape[0];
   var F = options.objective.func;
   var f0 = F(X);
-  var grad = ndarray(new Float64Array(n), [n]);
+  var grad = ndarray(new Float64Array(n), [n, 1]);
   var evaluateDerivative = gradientSelect(options.objective);
 
   var gradNorm = evaluateDerivative(X, grad);

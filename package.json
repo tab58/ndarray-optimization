@@ -4,7 +4,7 @@
   "description": "Optimization library for ndarrays",
   "main": "index.js",
   "scripts": {
-    "test": "semistandard && mocha test/*.js",
+    "test": "semistandard --verbose | snazzy && mocha test/*.js",
     "lint": "semistandard --verbose | snazzy"
   },
   "repository": {

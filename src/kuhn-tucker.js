@@ -11,7 +11,7 @@ var defaults = require('./global-defaults.js');
  *  @param{Object} options - contains the information for the algorithm
  *  @param{ndarray} X - the point to evaluate the Kuhn-Tucker conditions
  */
-module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
+module.exports = function kuhnTucker (options, X, tolerance) {
   // Check if objective is properly defined
   if (!options.hasOwnProperty('objective')) {
     throw new Error('Objective not defined.');
@@ -23,8 +23,8 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
   // Check if constraints have been defined
   var validEquality = false;
   var validInequality = false;
-  var equalityConstraints = undefined;
-  var inequalityConstraints = undefined;
+  var equalityConstraints;
+  var inequalityConstraints;
   if (options.hasOwnProperty('constraints') &&
     options.constraints.hasOwnProperty('equality') &&
     Array.isArray(options.constraints.equality)) {
@@ -44,6 +44,11 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
   var TOL = defaults.TOLERANCE;
   if (tolerance !== undefined && tolerance > 0) {
     TOL = tolerance;
+  } else if (tolerance === undefined &&
+    options.solution &&
+    options.solution.tolerance &&
+    !isNaN(options.solution.tolerance)) {
+    TOL = options.solution.tolerance;
   } else {
     console.warn('No tolerance specified. Using default tolerance of ' + TOL + '.');
   }
@@ -55,15 +60,20 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
   var ri = 0;
   var i = 0;
   var j = 0;
+  var k = 0;
   var N = ndarray(new Float64Array(n * m), [n, m]);
   var gradGX = ndarray(new Float64Array(n), [n, 1]);
-  var getGradG = undefined;
-  var G = undefined;
+  var getGradG;
+  var G;
   var tmp = 0;
+  var len;
+  var funcObject;
 
   if (validInequality) {
     // Determine active inequality constraints
-    inequalityConstraints.forEach(function (funcObject) {
+    len = inequalityConstraints.length;
+    for (k = 0; k < len; ++k) {
+      funcObject = inequalityConstraints[k];
       if (funcObject.hasOwnProperty('func') && funcObject.hasOwnProperty('gradient')) {
         G = funcObject.func;
         var Gx = G(X);
@@ -86,11 +96,13 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
           return false;
         }
       }
-    });
+    }
   }
   if (validEquality) {
     // All equality constraints are active.
-    equalityConstraints.forEach(function (funcObject) {
+    len = equalityConstraints.length;
+    for (k = 0; k < len; ++k) {
+      funcObject = equalityConstraints[k];
       if (funcObject.hasOwnProperty('func') && funcObject.hasOwnProperty('gradient')) {
         G = funcObject.func;
         // check if equality constraint is feasible
@@ -101,13 +113,13 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
           for (i = 0; i < n; ++i) {
             N.set(i, r, gradGX.get(i, 0));
           }
-          r++;  
+          r++;
         } else {
           // infeasible constraint
           return false;
         }
       }
-    });
+    }
   }
 
   // Determine if the objective function gradient is zero
@@ -119,7 +131,7 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
   // if there are actually constraints, there will be r of them
   var lambda = ndarray(new Float64Array(r), [r, 1]);
   if (r > 0) {
-    N.shape[1] = r;
+    N.hi(n, r); // N.shape[1] = r;
     // gradF - N*lambda = 0, N is n x r
     // i = 0, ..., ri are inequality
     // i = r1 + 1, ..., r are equality
@@ -131,9 +143,9 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
 
     // Q^T * N = | Q_1^T * N | = | R |
     //           | Q_2^T * N |   | 0 |
-    Qt.shape[0] = r; // now it's r x n
-    R.shape[0] = r; // now it's also r x r
-    
+    Qt.hi(r, n); // Qt.shape[0] = r; // now it's r x n
+    R.hi(r, r); // R.shape[0] = r; // now it's also r x r
+
     // now solve the equation R * lambda = Q_1^T * gradF to get a least-squares solution for lambda
     // construct Q_1^T * gradF
     var q = ndarray(new Float64Array(r), [r, 1]);
@@ -146,8 +158,8 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
       q.set(i, 0, tmp);
     }
     // backsubstitute into R to get lambdas
-    for (i = r - 1; i >= 0; ++i) {
-      tmp = q.get(i, 1);
+    for (i = r - 1; i >= 0; --i) {
+      tmp = q.get(i, 0);
       for (j = i + 1; j < r; ++j) {
         tmp -= R.get(i, j) * lambda.get(j, 0);
       }
@@ -162,17 +174,17 @@ module.exports.kuhnTucker = function kuhnTucker (options, X, tolerance) {
         return false;
       }
     }
-    
+
     // alter gradF to become the residual vector norm, i.e. gradF - N * lambda
-    for (i = 0; i < r; ++i) {
+    for (i = 0; i < n; ++i) {
       tmp = gradFX.get(i, 0);
-      for (j = 0; j < n; ++j) {
+      for (j = 0; j < r; ++j) {
         tmp -= N.get(i, j) * lambda.get(j, 0);
       }
-      gradFX.set(i, 0, tmp)
+      gradFX.set(i, 0, tmp);
     }
-  }  
-  
+  }
+
   // -- KT CONDITION --
   // gradF (and modified gradF) should be somewhat near zero
   for (i = 0; i < r; i++) {

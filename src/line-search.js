@@ -5,7 +5,7 @@ var ndarray = require('ndarray');
 
 module.exports.parabolicApprox = function parabolicLineSearch (X0, s, F, X) {
   var n = X0.shape[0];
-  var x = ndarray(new Float64Array(n), [n]);
+  var x = ndarray(new Float64Array(n), [n, 1]);
   blas1.copy(X0, x);
   var alphas = new Float64Array([0, 0, 0]);
   var fs = new Float64Array([0, 0, 0]);

@@ -2,18 +2,18 @@
 
 var ndarray = require('ndarray');
 var blas1 = require('ndarray-blas-level1');
-var blas2 = require('ndarray-blas-level2');
 var outerProduct = require('./outer-product.js');
+var gemv = require('./math/gemv.js');
 
 module.exports.hessian = {
   rank1: function (H, y, dx) {
     var n = y.shape[0];
 
     // TODO: should we clobber the y array instead of copy?
-    var t1 = ndarray(new Float64Array(n), [n]);
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
     blas1.copy(y, t1);
 
-    blas2.gemv(-1.0, H, dx, 1.0, t1);
+    gemv(-1.0, H, dx, 1.0, t1);
     var alpha = 1.0 / blas1.dot(t1, dx);
     outerProduct.addToExisting(alpha, t1, t1, H);
     return true;
@@ -21,8 +21,8 @@ module.exports.hessian = {
   rank2DFP: function (H, y, dx) {
     // warning: Tim's own implementation!!!
     var n = y.shape[0];
-    var t1 = ndarray(new Float64Array(n), [n]);
-    blas2.gemv(-1.0, H, dx, 0.0, t1);
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
+    gemv(-1.0, H, dx, 0.0, t1);
     var a = -1.0 / blas1.dot(t1, dx);
     outerProduct.addToExisting(t1, t1, a, H);
     var b = 1.0 / blas1.dot(y, dx);
@@ -30,8 +30,8 @@ module.exports.hessian = {
   },
   rank2BFGS: function (H, y, dx) {
     var n = y.shape[0];
-    var t1 = ndarray(new Float64Array(n), [n]);
-    blas2.gemv(1.0, H, dx, 0.0, t1);  // t1 = H * x
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
+    gemv(1.0, H, dx, 0.0, t1);  // t1 = H * x
     var a = 1.0 / blas1.dot(y, dx);
     var b = -1.0 / blas1.dot(dx, t1);
     outerProduct.addToExisting(y, y, a, H);
@@ -44,18 +44,18 @@ module.exports.hessianInverse = {
     var n = dx.shape[0];
 
     // TODO: should we clobber the dx array instead of copy?
-    var t1 = ndarray(new Float64Array(n), [n]);
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
     blas1.copy(dx, t1);
 
-    blas2.gemv(-1.0, N, y, 1.0, t1);
+    gemv(-1.0, N, y, 1.0, t1);
     var alpha = 1.0 / blas1.dot(t1, y);
     outerProduct.addToExisting(t1, t1, alpha, N);
     return true;
   },
   rank2DFP: function (N, y, dx) {
     var n = y.shape[0];
-    var t1 = ndarray(new Float64Array(n), [n]);
-    blas2.gemv(1.0, N, y, 0.0, t1);
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
+    gemv(1.0, N, y, 0.0, t1);
     var b = -1.0 / blas1.dot(t1, y);
     outerProduct.addToExisting(t1, t1, b, N);
     var a = 1.0 / blas1.dot(dx, y);
@@ -63,8 +63,8 @@ module.exports.hessianInverse = {
   },
   rank2BFGS: function (N, y, dx) {
     var n = y.shape[0];
-    var t1 = ndarray(new Float64Array(n), [n]);
-    blas2.gemv(1.0, N, y, 0.0, t1); // t1 = Nk * yk
+    var t1 = ndarray(new Float64Array(n), [n, 1]);
+    gemv(1.0, N, y, 0.0, t1); // t1 = Nk * yk
     var a = blas1.dot(dx, y);
     var b = blas1.dot(y, t1);
     var c = 1.0 / a;
