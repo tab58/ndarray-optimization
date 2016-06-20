@@ -5,6 +5,7 @@ var qr = require('ndarray-givens-qr');
 var gradientSelect = require('./lib/gradient-select.js');
 var defaults = require('./global-defaults.js');
 
+var printWarnings = false;
 /*
  *  Checks if the Kuhn-Tucker conditions hold.
  *
@@ -30,7 +31,7 @@ module.exports = function kuhnTucker (options, X, tolerance) {
     Array.isArray(options.constraints.equality)) {
     validEquality = true;
     equalityConstraints = options.constraints.equality;
-  } else {
+  } else if (printWarnings) {
     console.warn('Equality constraints not in an array. Skipping equality constraints.');
   }
   if (options.hasOwnProperty('constraints') &&
@@ -38,7 +39,7 @@ module.exports = function kuhnTucker (options, X, tolerance) {
     Array.isArray(options.constraints.inequality)) {
     validInequality = true;
     inequalityConstraints = options.constraints.inequality;
-  } else {
+  } else if (printWarnings) {
     console.warn('Inequality constraints not in an array. Skipping inequality constraints.');
   }
   var TOL = defaults.TOLERANCE;
@@ -49,7 +50,7 @@ module.exports = function kuhnTucker (options, X, tolerance) {
     options.solution.tolerance &&
     !isNaN(options.solution.tolerance)) {
     TOL = options.solution.tolerance;
-  } else {
+  } else if (printWarnings) {
     console.warn('No tolerance specified. Using default tolerance of ' + TOL + '.');
   }
 
@@ -162,6 +163,9 @@ module.exports = function kuhnTucker (options, X, tolerance) {
       tmp = q.get(i, 0);
       for (j = i + 1; j < r; ++j) {
         tmp -= R.get(i, j) * lambda.get(j, 0);
+      }
+      if (Math.abs(R.get(i, i)) < TOL) {
+        throw new Error('Divide by zero in backsubstitution. Check QR factorization of constraint Jacobian matrix.');
       }
       lambda.set(i, 0, tmp / R.get(i, i));
     }
