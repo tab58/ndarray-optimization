@@ -2,6 +2,17 @@
 
 An optimization library for [ndarrays](https://github.com/scijs/ndarray).
 
+## Available Functions
+
+- Unconstrained Optimization
+  - Steepest Descent
+  - Quasi-Newton Methods
+    - Rank 1 Update
+    - Rank 2 DFP Update
+    - Rank 2 BFGS Update
+- Constrained Optimization
+  - Kuhn-Tucker Conditions
+
 ## Options structure
 
 Optimization methods have very similar inputs, so the options structure provides a common interface for methods.
