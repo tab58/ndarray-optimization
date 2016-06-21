@@ -28,21 +28,21 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
   it('Two Step -- Rank 1, Analytical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': dF,
-          'delta': 0
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: dF,
+          delta: 0
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank1'
+      update: {
+        hessianInverse: true,
+        type: 'rank1'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);
@@ -50,25 +50,24 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
     chai.assert.isBelow(results.objective, TOLERANCE, 'Result is not within tolerance');
     chai.assert(results.iterations === 2, 'Should take only 2 iterations to reach optimum');
   });
-
   it('Two Step -- Rank 1, Numerical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': 'centralDifference',
-          'delta': 0.01
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: 'centralDifference',
+          delta: 0.01
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank1'
+      update: {
+        hessianInverse: true,
+        type: 'rank1'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);
@@ -76,25 +75,24 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
     chai.assert.isBelow(results.objective, TOLERANCE, 'Result is not within tolerance');
     chai.assert(results.iterations === 2, 'Should take only 2 iterations to reach optimum');
   });
-
   it('Two Step -- Rank 2 DFP, Analytical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': dF,
-          'delta': 0
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: dF,
+          delta: 0
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank2-dfp'
+      update: {
+        hessianInverse: true,
+        type: 'rank2-dfp'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);
@@ -106,21 +104,21 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
   it('Two Step -- Rank 2 DFP, Numerical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': 'centralDifference',
-          'delta': 0.01
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: 'centralDifference',
+          delta: 0.01
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank2-dfp'
+      update: {
+        hessianInverse: true,
+        type: 'rank2-dfp'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);
@@ -132,21 +130,21 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
   it('Two Step -- Rank 2 BFGS, Analytical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': dF,
-          'delta': 0
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: dF,
+          delta: 0
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank2-bfgs'
+      update: {
+        hessianInverse: true,
+        type: 'rank2-bfgs'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);
@@ -158,21 +156,21 @@ describe('Unconstrained -- Quasi-Newton Methods', function () {
   it('Two Step -- Rank 2 BFGS, Numerical', function () {
     var x0 = ndarray(new Float64Array([-3, 1]), [2, 1]);
     var options = {
-      'objective': {
-        'start': x0,
-        'func': F,
-        'gradient': {
-          'func': 'centralDifference',
-          'delta': 0.01
-        },
-        'solution': {
-          'tolerance': TOLERANCE,
-          'maxIterations': MAX_ITERATIONS
+      objective: {
+        start: x0,
+        func: F,
+        gradient: {
+          func: 'centralDifference',
+          delta: 0.01
         }
       },
-      'update': {
-        'hessianInverse': true,
-        'type': 'rank2-bfgs'
+      update: {
+        hessianInverse: true,
+        type: 'rank2-bfgs'
+      },
+      solution: {
+        tolerance: TOLERANCE,
+        maxIterations: MAX_ITERATIONS
       }
     };
     var results = quasiNewton(options);

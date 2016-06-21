@@ -26,10 +26,6 @@ options = {
     'gradient': {
       'func': <string> or <function>,
       'delta': <number>
-    },
-    'solution': {
-      'tolerance': <number>,
-      'maxIterations': <number>
     }
   },
   'update': {

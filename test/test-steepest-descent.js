@@ -30,11 +30,11 @@ describe('Unconstrained -- Steepest Descent', function () {
         'gradient': {
           'func': 'centralDifference',
           'delta': 0.01
-        },
-        'solution': {
-          'tolerance': 1e-4,
-          'maxIterations': 200
         }
+      },
+      'solution': {
+        'tolerance': 1e-4,
+        'maxIterations': 200
       }
     };
     var results = steepestDescent(options);
@@ -60,11 +60,11 @@ describe('Unconstrained -- Steepest Descent', function () {
             return Math.sqrt(g1 * g1 + g2 * g2);
           },
           'delta': 0
-        },
-        'solution': {
-          'tolerance': 1e-4,
-          'maxIterations': 200
         }
+      },
+      'solution': {
+        'tolerance': 1e-4,
+        'maxIterations': 200
       }
     };
     var results = steepestDescent(options);
@@ -82,11 +82,11 @@ describe('Unconstrained -- Steepest Descent', function () {
         'gradient': {
           'func': 'centralDifference',
           'delta': 0.01
-        },
-        'solution': {
-          'tolerance': 1e-10,
-          'maxIterations': 200
         }
+      },
+      'solution': {
+        'tolerance': 1e-10,
+        'maxIterations': 200
       }
     };
     var results = steepestDescent(options);
@@ -114,11 +114,11 @@ describe('Unconstrained -- Steepest Descent', function () {
           },
           'delta': 0,
           'array': null
-        },
-        'solution': {
-          'tolerance': 1e-10,
-          'maxIterations': 200
         }
+      },
+      'solution': {
+        'tolerance': 1e-10,
+        'maxIterations': 200
       }
     };
     var results = steepestDescent(options);

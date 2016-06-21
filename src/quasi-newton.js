@@ -18,15 +18,24 @@ module.exports = function quasiNewton (options) {
   if (!options.objective.func) {
     throw new Error('Undefined objective function.');
   }
+
   var maxIterations = defaults.MAX_ITERATIONS;
   var tolerance = defaults.tolerance;
-  if (options.objective.solution) {
-    maxIterations = options.objective.solution.maxIterations;
-    tolerance = options.objective.solution.tolerance;
-  } else {
-    console.warn('Maximum iterations capped at default of ' + maxIterations + '.');
-    console.warn('Numerical tolerance is default of ' + tolerance + '.');
+  if (options.solution) {
+    if (options.solution.maxIterations &&
+      !isNaN(options.solution.maxIterations)) {
+      maxIterations = options.solution.maxIterations;
+    } else {
+      console.warn('Maximum iterations capped at default of ' + maxIterations + '.');
+    }
+    if (options.solution.tolerance &&
+      !isNaN(options.solution.tolerance)) {
+      tolerance = options.solution.tolerance;
+    } else {
+      console.warn('Numerical tolerance is default of ' + tolerance + '.');
+    }
   }
+
   var evaluateDerivative = gradientSelect(options.objective);
   var F = options.objective.func;
   var updateInverse = rankUpdater(options);

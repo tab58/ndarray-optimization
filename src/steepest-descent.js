@@ -11,21 +11,32 @@ var defaults = require('./global-defaults.js');
  *  @param{Object} options - contains the information for the algorithm.
  */
 module.exports = function steepestDescent (options) {
+  if (!options.objective) {
+    throw new Error('Undefined optimization objective.');
+  }
   if (!options.objective.start) {
     throw new Error('Undefined start position.');
   }
-  if (!options.objective || !options.objective.func) {
+  if (!options.objective.func) {
     throw new Error('Undefined objective function.');
   }
   var maxIterations = defaults.MAX_ITERATIONS;
-  var tolerance = defaults.TOLERANCE;
-  if (options.objective.solution) {
-    maxIterations = options.objective.solution.maxIterations;
-    tolerance = options.objective.solution.tolerance;
-  } else {
-    console.warn('Maximum iterations capped at default of ' + maxIterations + '.');
-    console.warn('Numerical tolerance is default of ' + tolerance + '.');
+  var tolerance = defaults.tolerance;
+  if (options.solution) {
+    if (options.solution.maxIterations &&
+      !isNaN(options.solution.maxIterations)) {
+      maxIterations = options.solution.maxIterations;
+    } else {
+      console.warn('Maximum iterations capped at default of ' + maxIterations + '.');
+    }
+    if (options.solution.tolerance &&
+      !isNaN(options.solution.tolerance)) {
+      tolerance = options.solution.tolerance;
+    } else {
+      console.warn('Numerical tolerance is default of ' + tolerance + '.');
+    }
   }
+
   var X = options.objective.start;
   var n = X.shape[0];
   var F = options.objective.func;
