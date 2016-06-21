@@ -6,5 +6,6 @@ module.exports.unconstrained = {
 };
 
 module.exports.constrained = {
-  kuhnTucker: require('./src/kuhn-tucker.js')
+  kuhnTucker: require('./src/kuhn-tucker.js'),
+  sqp: require('./src/seq-quad-programming.js')
 };
