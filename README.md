@@ -36,22 +36,34 @@ options = {
     'equality': [
       {
         'func': <function>,
-        'gradient': <function> or <string>,
+        'gradient': {
+          'func': <string> or <function>,
+          'delta': <number>
+        }
       },
       {
         'func': <function>,
-        'gradient': <function> or <string>,
+        'gradient': {
+          'func': <string> or <function>,
+          'delta': <number>
+        }
       },
       ...
     ],
     'inequality': [
       {
         'func': <function>,
-        'gradient': <function> or <string>,
+        'gradient': {
+          'func': <string> or <function>,
+          'delta': <number>
+        }
       },
       {
         'func': <function>,
-        'gradient': <function> or <string>,
+        'gradient': {
+          'func': <string> or <function>,
+          'delta': <number>
+        }
       },
       ...
     ]
